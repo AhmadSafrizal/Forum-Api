@@ -1,4 +1,4 @@
-const routes = (handler) => [
+const routes = (handler) => ([
   {
     method: 'GET',
     path: '/threads/{threadId}',
@@ -12,6 +12,6 @@ const routes = (handler) => [
       auth: 'forumapi_jwt',
     },
   },
-];
+]);
 
 module.exports = routes;

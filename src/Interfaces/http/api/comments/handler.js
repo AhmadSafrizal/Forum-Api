@@ -11,12 +11,12 @@ class CommentHandler {
     this._deleteCommentHandler = this.deleteCommentHandler.bind(this);
   }
 
-  async postCommentHandler(req, h) {
+  async postCommentHandler(request, h) {
     try {
       const useCasePayload = {
-        content: req.payload.content,
-        threadId: req.payload.threadId,
-        owner: req.auth.credentials.id,
+        content: request.payload.content,
+        threadId: request.payload.threadId,
+        owner: request.auth.credentials.id,
       };
 
       const addCommmentUseCase = this._container.getInstance(AddCommentUseCase.name);

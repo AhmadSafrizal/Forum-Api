@@ -11,10 +11,10 @@ class ReplyHandler {
     this._deleteReplyByIdHandler = this.deleteReplyByIdHandler.bind(this);
   }
 
-  async postReplyHandler(req, h) {
+  async postReplyHandler(request, h) {
     try {
-      const { threadId, commentId } = req.params;
-      const { id: credentialId } = req.auth.credentials;
+      const { threadId, commentId } = request.params;
+      const { id: credentialId } = request.auth.credentials;
 
       const addReplyUseCase = this._container.getInstance(AddReplyUseCase.name);
       const addedReply = await addReplyUseCase.execute({
@@ -43,10 +43,10 @@ class ReplyHandler {
     }
   }
 
-  async deleteReplyByIdHandler(req, h) {
+  async deleteReplyByIdHandler(request, h) {
     try {
-      const { threadId, commentId, replyId } = req.params;
-      const { id: credentialId } = req.auth.credentials;
+      const { threadId, commentId, replyId } = request.params;
+      const { id: credentialId } = request.auth.credentials;
 
       const deleteReplyUseCase = this._container.getInstance(DeleteReplyUseCase.name);
       await deleteReplyUseCase.execute({
