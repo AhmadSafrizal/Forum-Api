@@ -442,7 +442,7 @@ describe('end point add reply', () => {
       const responseJson = JSON.parse(response.payload);
       expect(response.statusCode).toEqual(403);
       expect(responseJson.status).toEqual('fail');
-      expect(responseJson.message).toEqual('Anda tidak berhak mengakses resource ini');
+      expect(responseJson.message).toEqual('Anda tidak mempunyai hak mengakses data ini');
     });
 
     it('should response 200 when delete reply', async () => {

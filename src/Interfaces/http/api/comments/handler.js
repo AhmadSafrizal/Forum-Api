@@ -7,30 +7,31 @@ const DomainErrorTranslator = require('../../../../Commons/exceptions/DomainErro
 class CommentHandler {
   constructor(container) {
     this._container = container;
-    this._postCommentHandler = this.postCommentHandler.bind(this);
-    this._deleteCommentHandler = this.deleteCommentHandler.bind(this);
+    this.postCommentHandler = this.postCommentHandler.bind(this);
+    this.deleteCommentHandler = this.deleteCommentHandler.bind(this);
   }
 
   async postCommentHandler(request, h) {
     try {
-      const useCasePayload = {
+      const addCommmentUseCase = this._container.getInstance(AddCommentUseCase.name);
+
+      const payload = {
+        threadId: request.params.threadId,
         content: request.payload.content,
-        threadId: request.payload.threadId,
         owner: request.auth.credentials.id,
       };
 
-      const addCommmentUseCase = this._container.getInstance(AddCommentUseCase.name);
-      const addedComment = await addCommmentUseCase.execute(useCasePayload);
+      const addedComment = await addCommmentUseCase.execute(payload);
 
-      const res = h.response({
+      const response = h.response({
         status: 'success',
         message: 'Komentar berhasil ditambah',
         data: {
           addedComment,
         },
       });
-      res.code(201);
-      return res;
+      response.code(201);
+      return response;
     } catch (error) {
       const translatedError = DomainErrorTranslator.translate(error);
       const response = h.response({
@@ -42,16 +43,17 @@ class CommentHandler {
     }
   }
 
-  async deleteCommentHandler({ params, auth }, h) {
+  async deleteCommentHandler(request, h) {
     try {
-      const useCasePayload = {
-        commentId: params.commentId,
-        threadId: params.threadId,
-        owner: auth.credentials.id,
+      const deleteComment = this._container.getInstance(DeleteCommentUseCase.name);
+
+      const payload = {
+        commentId: request.params.commentId,
+        threadId: request.params.threadId,
+        owner: request.auth.credentials.id,
       };
 
-      const deleteComment = this._container.getInstance(DeleteCommentUseCase.name);
-      await deleteComment.execute(useCasePayload);
+      await deleteComment.execute(payload);
 
       return {
         status: 'success',

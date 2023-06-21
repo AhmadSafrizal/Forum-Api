@@ -5,25 +5,25 @@ class DetailThread {
     this._verifyPayload(payload);
 
     const {
-      id, title, body, date, username,
+      id, username, date, content, is_delete: isDelete,
     } = payload;
+
     this.id = id;
-    this.title = title;
-    this.body = body;
-    this.date = date;
     this.username = username;
+    this.date = date.toISOString();
+    this.content = (isDelete) ? '**komentar telah dihapus**' : content;
   }
 
   _verifyPayload(payload) {
     const {
-      id, title, body, date, username,
+      id, username, date, content, is_delete: isDelete,
     } = payload;
-    if (!id || !title || !body || !date || !username) {
+
+    if (!id || !username || !date || !content) {
       throw new Error('DETAIL_THREAD.NOT_CONTAIN_NEEDED_PROPERTY');
     }
 
-    if (typeof id !== 'string' || typeof title !== 'string' || typeof body !== 'string' || typeof date !== 'string' || typeof username !== 'string'
-    ) {
+    if (typeof id !== 'string' || typeof username !== 'string' || typeof content !== 'string' || typeof isDelete !== 'boolean') {
       throw new Error('DETAIL_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }
   }

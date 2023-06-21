@@ -6,19 +6,20 @@ const DomainErrorTranslator = require('../../../../Commons/exceptions/DomainErro
 class ThreadHandler {
   constructor(container) {
     this._container = container;
-    this._postThreadHandler = this.postThreadHandler.bind(this);
-    this._getThreadByIdHandler = this.getThreadByIdHandler.bind(this);
+    this.postThreadHandler = this.postThreadHandler.bind(this);
+    this.getThreadByIdHandler = this.getThreadByIdHandler.bind(this);
   }
 
   async postThreadHandler(request, h) {
     try {
+      const addThreadUseCase = this._container.getInstance(AddThreadUseCase.name);
+
       const useCasePayload = {
         title: request.payload.title,
         body: request.payload.body,
         owner: request.auth.credentials.id,
       };
 
-      const addThreadUseCase = this._container.getInstance(AddThreadUseCase.name);
       const addedThread = await addThreadUseCase.execute(useCasePayload);
 
       const response = h.response({

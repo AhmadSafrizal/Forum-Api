@@ -7,16 +7,17 @@ const DomainErrorTranslator = require('../../../../Commons/exceptions/DomainErro
 class ReplyHandler {
   constructor(container) {
     this._container = container;
-    this._postReplyHandler = this.postReplyHandler.bind(this);
-    this._deleteReplyByIdHandler = this.deleteReplyByIdHandler.bind(this);
+    this.postReplyHandler = this.postReplyHandler.bind(this);
+    this.deleteReplyByIdHandler = this.deleteReplyByIdHandler.bind(this);
   }
 
   async postReplyHandler(request, h) {
     try {
+      const addReplyUseCase = this._container.getInstance(AddReplyUseCase.name);
+
       const { threadId, commentId } = request.params;
       const { id: credentialId } = request.auth.credentials;
 
-      const addReplyUseCase = this._container.getInstance(AddReplyUseCase.name);
       const addedReply = await addReplyUseCase.execute({
         content,
         threadId,
@@ -24,14 +25,14 @@ class ReplyHandler {
         owner: credentialId,
       });
 
-      const res = h.response({
+      const response = h.response({
         status: 'success',
         data: {
           addedReply,
         },
       });
-      res.code(201);
-      return res;
+      response.code(201);
+      return response;
     } catch (error) {
       const translatedError = DomainErrorTranslator.translate(error);
       const response = h.response({
